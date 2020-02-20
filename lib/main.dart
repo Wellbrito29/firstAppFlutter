@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,31 +12,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  void _answerQuestions() {
+  final questions = const [
+    {
+      'questionText': 'Qual a sua cor favorita  1111?',
+      'answers': [{'text':'Azul', 'score': 10 }, {'text':'Vermelho', 'score': 20 }, {'text':'PRETO', 'score': 40 }, {'text':'branco', 'score': 50 }]
+    },
+    {
+      'questionText': 'Qual a sua cor favorita  221?',
+      'answers': [{'text':'Azul', 'score': 10 }, {'text':'Vermelho', 'score': 20 }, {'text':'PRETO', 'score': 40 }, {'text':'branco', 'score': 50 }]
+    },
+    {
+      'questionText': 'Qual a sua cor favorita  3311?',
+      'answers': [{'text':'Azul', 'score': 10 }, {'text':'Vermelho', 'score': 20 }, {'text':'PRETO', 'score': 40 }, {'text':'branco', 'score': 50 }]
+    },
+    
+  ];
+
+  void _answerQuestions(int score) {
+
+    _score  += score; 
     print('resposta respondida');
 
     setState(() {
-      print(_qindex);
-      if (_qindex >= 1) {
-        _qindex = 0;
-      } else
-        _qindex += 1;
+        _qindex = _qindex + 1;
+      
     });
   }
 
-  var _qindex = 0;
-  var questions = [
-    {
-      'questionText': 'Qual a sua cor favorita?',
-       'answers': ['Azul', 'Vermelho', 'Preto', 'Branco']
-    },
+void _restart () {
 
-    {
-      'questionText': 'Qual droga você prefere?',
-       'answers': ['MD', 'Maconha', 'Loló', 'Álcool']
-    },
-   
-  ];
+setState(() {
+  _qindex = 0;
+  _score = 0;
+});
+  
+}
+
+
+  var _qindex = 0;
+  var _score = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +59,11 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('My Fist App'),
         ),
-        body: Column(
-          children: [
-            Question(
-              questions[_qindex]['questionText'],
-            ),
-            
-            ...(questions[_qindex]['answers'] as List<String>).map((answer) {
-              return Answer(_answerQuestions,answer);
-            }).toList()
-          ],
-        ),
+        body: _qindex < questions.length
+            ? Quiz(answerQuestions: _answerQuestions, qIndex: _qindex,questions: questions,)  
+            : Result(_score,_restart,),
       ),
     );
   }
 }
+ 
